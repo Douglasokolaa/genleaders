@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use Binaryk\LaravelRestify\Exceptions\RepositoryNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,5 +48,17 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $e): \Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+    {
+        if ($request->wantsJson() || $request->isJson() || $request->acceptsJson()) {
+            if ($e instanceof RepositoryNotFoundException) {
+                return parent::prepareJsonResponse($request, new NotFoundHttpException($e->getMessage()));
+            }
+
+            return parent::prepareJsonResponse($request, $e);
+        }
+        return parent::render($request, $e);
     }
 }

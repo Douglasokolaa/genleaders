@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'base' => '/api/restify',
+    'base' => '/api',
 
     /*
     |--------------------------------------------------------------------------
@@ -97,7 +97,7 @@ return [
         'api',
         //'auth:sanctum',
         DispatchRestifyStartingEvent::class,
-        AuthorizeRestify::class,
+        # AuthorizeRestify::class,
     ],
 
     /*
